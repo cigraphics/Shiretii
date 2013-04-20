@@ -6,7 +6,9 @@
 var express = require('express')
   , routes = require('./routes')
   , moment = require('moment')
-  , mysql = require('mysql');
+  , mysql = require('mysql')
+  , url = require('url')
+  , qs = require('qs');
 
 var app = module.exports = express();
 
@@ -36,8 +38,8 @@ app.configure('production', function(){
 //mysql database
 
 var mySqlPool  = mysql.createPool({
-  host     : 'localhost',
-  user     : 'root',
+  host : 'localhost',
+  user : 'root',
   password : '1234%asd',
   database : 'piofthetiger'
 });
@@ -55,10 +57,11 @@ global.applicationTile= "PiOfTheTiger";
 app.get('/', routes.index);
 app.get('/Login', routes.login);
 app.get('/MyHouse', checkAuth, routes.myhouse);
+app.get('/Settings', checkAuth, routes.settings);
 
 
 app.listen(process.env.port || 3000);
-//console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+console.log("Express server listening on port %d in %s mode", (process.env.port || 3000), app.settings.env);
 
 
 function checkAuth(req, res, next) {
@@ -70,8 +73,8 @@ function checkAuth(req, res, next) {
 }
 
 app.get('/logout', function (req, res) {
-  delete req.session.user_id;
-  res.redirect('/login');
+  delete req.session.user;
+  res.redirect('/');
 });
 
 app.post('/login', function (req, res)
@@ -87,10 +90,14 @@ app.post('/login', function (req, res)
             if (rows[0])
             {
                 req.session.user = { isAuthenticated: true, name: userName, id: rows[0].IdUser };
-                if (req.query["returnUrl"])
-                    res.redirect(req.query["returnUrl"]);
+                var parsedUrl = qs.parse(url.parse(req.url).query);
+                var returnUrl = parsedUrl.returnUrl || req.body.returnUrl;
+                res.send(req.url);
+                /*if (returnUrl)
+                //res.redirect(req.body[returnUrl]);
+                    res.send(returnUrl);
                 else
-                    res.redirect('/');
+                    res.redirect('/');*/
             }
             else
             {

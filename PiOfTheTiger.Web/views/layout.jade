@@ -31,16 +31,17 @@ html(lang='en')
                   li
                     a(href='/About') About
               .nav-collapse
-                ul.nav.pull-right
+                ul.nav.pull-right                    
                     li
-                        a(href='/Register') Register
-                    li
-                        a(href='/Login') Login
+                        if user                                                   
+                            a(href='/Logout') Logout                        
+                        else 
+                            a(href='/Login') Login                        
     #wrap        
         #main.container.clear-top
             block content
             
-    #footer
+    #wrap.footer
         .container
             .row-fluid
                 .span4
