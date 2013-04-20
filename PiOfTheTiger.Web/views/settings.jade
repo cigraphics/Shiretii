@@ -3,3 +3,25 @@ extends layout
 block content
     h1 Settings page
     p Here you can modify your system settings
+    .tabbable.tabs-left
+        ul.nav.nav-tabs(id="settingsTabs")
+            li
+                a(href='#General', data-toggle='tab') General
+            li
+                a(href='#Emails', data-toggle='tab') Emails
+            li
+                a(href='#Cameras', data-toggle='tab') Cameras
+        .tab-content
+            #General.tab-pane.fade                 
+                include partials/general
+            #Emails.tab-pane.fade
+                p tab 2
+            #Cameras.tab-pane.fade
+                p tab 3
+
+block scripts
+    script
+        $(function() {
+            $('#settingsTabs a:first').tab('show');            
+        });
+        

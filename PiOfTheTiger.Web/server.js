@@ -92,12 +92,10 @@ app.post('/login', function (req, res)
                 req.session.user = { isAuthenticated: true, name: userName, id: rows[0].IdUser };
                 var parsedUrl = qs.parse(url.parse(req.url).query);
                 var returnUrl = parsedUrl.returnUrl || req.body.returnUrl;
-                res.send(req.url);
-                /*if (returnUrl)
-                //res.redirect(req.body[returnUrl]);
-                    res.send(returnUrl);
+                if (req.body.returnUrl)
+                    res.redirect(req.body.returnUrl);
                 else
-                    res.redirect('/');*/
+                    res.redirect('/');
             }
             else
             {

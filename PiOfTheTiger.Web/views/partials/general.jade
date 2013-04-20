@@ -1,0 +1,23 @@
+#generalSettings
+    h4 General settings
+    p This page contains some general settings that you can configure in this system
+    form( method="post")#login-form.span4            
+            input(type="hidden", name="returnUrl", id="returnUrl")
+            div.clear-fix
+            hr            
+            label Tollerance 
+            .btn-group(data-toggle="buttons-radio")
+                button.btn Very low
+                    i.icn-flower
+                button.btn Low
+                button.btn Medium
+                button.btn High
+                button.btn Very high
+            a.btn.primary(href='#')
+                img.pull-left.button-icon(src='../img/flower-pot.png')
+                  | Text
+            div.clear-fix
+            hr            
+            button(type="submit")#btn-login.btn.btn-primary
+                i.icon-ok.icon-white
+                |     Save                       

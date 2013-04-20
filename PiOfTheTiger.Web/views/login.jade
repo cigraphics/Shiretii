@@ -1,16 +1,24 @@
 extends layout
 
-block content
-    h1 Please login to access the application
-    form.form-horizontal(method="post", action="/login")
-        .control-group            
-            label.control-label(for="user") Username
-            input.controls(name="user")
-        .control-group
-            label.control-label(for="password") Password
-            input.controls(type="password", name="password")
-        .control-group
-            input.btn(type="submit", name="login", text="Login") Login
+block content    
+    p 
+    #login-container.span6.offset3
+        form( method="post")#login-form.well.span4
+            h1 #{title}
+            input(type="hidden", name="returnUrl", id="returnUrl")
+            p.subheading Please Login To Your Account
+            label Username 
+            input(type="text", name="user", id='user', required).span4.required
+            label Password
+            input(type="password", name="password", id='password', required).span4.required
+            button(type="submit")#btn-login.btn.btn-primary
+                i.icon-lock.icon-white
+                |     Sign in            
+            div.clear-fix
+            hr
+            div.btm-links
+                a(href='#')#forgot-password Forgot Your Password?                
+
 
     #loginFailed.modal.hide.fade
         .modal-header
@@ -26,5 +34,6 @@ block content
         function getURLParameter(name) {
             return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
         }
+        $('#returnUrl').val(getURLParameter('returnUrl'));
         if (getURLParameter('loginfailed')=='true')
             $('#loginFailed').modal('show');       
