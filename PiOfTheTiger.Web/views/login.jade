@@ -4,11 +4,27 @@ block content
     h1 Please login to access the application
     form.form-horizontal(method="post", action="/login")
         .control-group            
-            label.control-label(for="username") Username
-            input.controls(name="username")
+            label.control-label(for="user") Username
+            input.controls(name="user")
         .control-group
             label.control-label(for="password") Password
             input.controls(type="password", name="password")
         .control-group
             input.btn(type="submit", name="login", text="Login") Login
-        
+
+    #loginFailed.modal.hide.fade
+        .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') x
+            h3 Login error
+          .modal-body
+            p Wrong user name or password!
+          .modal-footer
+            button.btn.btn-primary(type='button', data-dismiss='modal', aria-hidden='true') Close            
+
+ block scripts
+    script
+        function getURLParameter(name) {
+            return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+        }
+        if (getURLParameter('loginfailed')=='true')
+            $('#loginFailed').modal('show');       
