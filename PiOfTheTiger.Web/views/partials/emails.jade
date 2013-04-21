@@ -1,0 +1,23 @@
+#emailSettings
+    h4 Email settings    
+    p This page contains settings regarding the mail server
+    form( method="post", action="/saveEmailSettings")#login-form.span4            
+            input(type="hidden", name="returnUrl", id="returnUrl")
+            div.clear-fix
+            hr            
+            label SMTP server
+            input(type="text", name="smtpServer", id="smtpServer", value=smtpServer)            
+            label SMTP port
+            input(type="text", name="smtpPort", id="smtpPort", value=smtpPort)
+            label SMTP user
+            input(type="text", name="smtpUser", id="smtpUser", value=smtpUserName)
+            label SMTP password
+            input(type="password", name="smtpPassword", id="smtpPassword", value=smtpPassword)
+            label Use SSL
+            input(type="checkbox", name="smtpUseSSL", id="smtpUseSSL", checked="#{smtpSSL== true ? checked : ''")
+            input(type="hidden", name="tolerance", id="tolerance")
+            div.clear-fix
+            hr            
+            button(type="submit")#btn-login.btn.btn-primary
+                i.icon-ok.icon-white
+                |     Save

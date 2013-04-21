@@ -8,7 +8,8 @@ var express = require('express')
   , moment = require('moment')
   , mysql = require('mysql')
   , url = require('url')
-  , qs = require('qs');
+  , qs = require('qs')
+  , fs = require('fs');
 
 var app = module.exports = express();
 
@@ -25,6 +26,7 @@ app.configure(function ()
     app.use(app.router);
     
     app.use(express.static(__dirname + '/public'));
+    app.use(express.static(__dirname + '/pictures'));
 });
 
 app.configure('development', function(){
@@ -41,14 +43,75 @@ global.mySqlPool  = mysql.createPool({
   host : 'localhost',
   user : 'root',
   password : '1234%asd',
-  database : 'piofthetiger'
+  database : 'piofthetiger',
+  multipleStatements: true
 });
 
+/*get images*/
+function readProcessedImages(req, res, next)
+{
+    global.mySqlPool.getConnection(function (err, connection)
+    {
+        var sqlPicturesSavePath = "select `Value` from appsettings where ID in (6)";
+        connection.query(sqlPicturesSavePath, function (err, rows)
+        {
+            if (err) throw err;
+            var picsPath = rows[0].Value;
 
+            var files = fs.readdirSync(picsPath);
+
+            global.savedPictures = files;
+            global.PicturesPath = picsPath;
+            next();
+        }); ;
+        connection.end();
+    });  
+}
+
+/*load settings*/
+/*var picturesSavedPath = "";
+var picturesTolerance = "";
+var picuresInterval = "";*/
+
+function readGeneralSettings(req, res, next)
+{    
+    global.mySqlPool.getConnection(function (err, connection)
+    {
+        var sqlPicturesSavePath = "select `Value` from appsettings where ID in (6, 7, 8)";
+        connection.query(sqlPicturesSavePath, function (err, rows)
+        {
+            if (err) throw err;
+            global.picturesSavedPath = rows[0].Value;
+            global.picuresInterval = rows[1].Value;
+            global.picturesTolerance = rows[2].Value; 
+            next();       
+        }); ;
+        connection.end();
+    });    
+}
+
+function readEmailSettings(req, res, next)
+{    
+    global.mySqlPool.getConnection(function (err, connection)
+    {
+        var sqlPicturesSavePath = "select `Value` from appsettings where ID in (1,2,3,4,5)";
+        connection.query(sqlPicturesSavePath, function (err, rows)
+        {
+            if (err) throw err;
+            global.smtpServer = rows[0].Value;
+            global.smtpUserName = rows[1].Value;
+            global.smtpPassword = rows[2].Value; 
+            global.smtpPort = rows[3].Value;
+            global.smtpSSL = rows[4].Value;
+            next();       
+        }); ;
+        connection.end();
+    });    
+}
 
 //global
 
-app.locals.appSettings = { date: new moment().calendar() };
+global.appSettings = { date: new moment().calendar() };
 
 global.applicationTile= "PiOfTheTiger";
 
@@ -56,8 +119,12 @@ global.applicationTile= "PiOfTheTiger";
 
 app.get('/', routes.index);
 app.get('/Login', routes.login);
-app.get('/MyHouse', checkAuth, routes.myhouse);
-app.get('/Settings', checkAuth, routes.settings);
+app.get('/MyHouse', checkAuth, readProcessedImages, routes.myhouse);
+app.get('/Settings', checkAuth, readGeneralSettings, readEmailSettings, routes.settings);
+app.get('/logout', function (req, res) {
+  delete req.session.user;
+  res.redirect('/');
+});
 
 
 app.listen(process.env.port || 3000);
@@ -72,10 +139,6 @@ function checkAuth(req, res, next) {
   }
 }
 
-app.get('/logout', function (req, res) {
-  delete req.session.user;
-  res.redirect('/');
-});
 
 app.post('/login', function (req, res)
 {

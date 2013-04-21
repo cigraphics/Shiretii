@@ -1,6 +1,5 @@
 #generalSettings
-    h4 General settings
-    
+    h4 General settings        
     p This page contains some general settings that you can configure in this system
     form( method="post", action="/saveGeneralSettings")#login-form.span4            
             input(type="hidden", name="returnUrl", id="returnUrl")
@@ -8,16 +7,16 @@
             hr            
             label Picture tolerance 
             .btn-group(data-toggle="buttons-radio")
-                button.btn(type="button", value="1") Very low                    
-                button.btn(type="button", value="2") Low
-                button.btn(type="button", value="3") Medium
-                button.btn(type="button", value="4") High
-                button.btn(type="button", value="5") Very high
+                button(class="btn #{picTolerance == 1 ? 'active' : ''}", type="button", value="1") Very low                    
+                button(class="btn #{picTolerance == 2 ? 'active' : ''}", type="button", value="2") Low
+                button(class="btn #{picTolerance == 3 ? 'active' : ''}", type="button", value="3") Medium
+                button(class="btn #{picTolerance == 4 ? 'active' : ''}", type="button", value="4") High
+                button(class="btn #{picTolerance == 5 ? 'active' : ''}", type="button", value="5") Very high
             &nbsp;
             label Picture save path
-            input(type="text", name="imgPath", id="imgPath", value=PicturesSavedPath)
+            input(type="text", name="imgPath", id="imgPath", value=picSavedPath)
             label Picture save interval (in minutes)
-            input(type="range", name="imgSaveInterval", id="imgSaveInterval", min="1", max="10", value="1")
+            input(type="range", name="imgSaveInterval", id="imgSaveInterval", min="1", max="10", value=picSaveInterval)
             input(type="hidden", name="tolerance", id="tolerance")
             div.clear-fix
             hr            
