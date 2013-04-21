@@ -62,4 +62,5 @@ hr.clean {
 .button-icon {   
     width: 14px;
     height:  14px;
+    vertical-align: central;
 }

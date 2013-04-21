@@ -37,7 +37,7 @@ app.configure('production', function(){
 
 //mysql database
 
-var mySqlPool  = mysql.createPool({
+global.mySqlPool  = mysql.createPool({
   host : 'localhost',
   user : 'root',
   password : '1234%asd',
@@ -79,7 +79,7 @@ app.get('/logout', function (req, res) {
 
 app.post('/login', function (req, res)
 {
-    mySqlPool.getConnection(function (err, connection)
+    global.mySqlPool.getConnection(function (err, connection)
     {
         var userName = req.body.user;
         var password = req.body.password;
@@ -104,4 +104,41 @@ app.post('/login', function (req, res)
         });
         connection.end();
     });
+});
+
+app.post('/saveGeneralSettings', function (req, res)
+{
+    global.mySqlPool.getConnection(function (err, connection)
+    {
+        var tolerance = req.body.tolerance;
+        var sqlTolerance = 'update appsettings set `Value`=' + connection.escape(tolerance) + ' where `Key`=\'PicturesCompareTolerance\';';
+        connection.query(sqlTolerance, function (err, rows)
+        {
+            if (err) res.redirect('/Settings?erroSaveSettings=true', { error: err });
+        });
+        connection.end();
+    });
+
+    global.mySqlPool.getConnection(function (err, connection)
+    {
+        var imgPath = req.body.imgPath;
+        var sqlimgPath = 'update appsettings set `Value` = ' + connection.escape(imgPath) + ' where `Key` = \'PicturesSavePath\'';
+        connection.query(sqlimgPath, function (err, rows)
+        {
+            if (err) res.redirect('/Settings?erroSaveSettings=true', { error: err });
+        });
+        connection.end();
+    });
+
+    global.mySqlPool.getConnection(function (err, connection)
+    {
+        var imgSaveInterval = req.body.imgSaveInterval;
+        var sqlimgSaveInterval = 'update appsettings set `Value` = ' + connection.escape(imgSaveInterval) + ' where `Key` = \'PicturesSaveInterval\'';
+        connection.query(sqlimgSaveInterval, function (err, rows)
+        {
+            if (err) res.redirect('/Settings?erroSaveSettings=true', { error: err });
+        });
+        connection.end();
+    });
+    res.redirect('/Settings');
 });

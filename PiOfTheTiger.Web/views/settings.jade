@@ -19,9 +19,24 @@ block content
             #Cameras.tab-pane.fade
                 p tab 3
 
+#saveSettingsFailed.modal.hide.fade
+        .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') x
+            h3 Save settings error
+          .modal-body
+            p #{error}
+          .modal-footer
+            button.btn.btn-primary(type='button', data-dismiss='modal', aria-hidden='true') Close  
+
+
 block scripts
     script
         $(function() {
             $('#settingsTabs a:first').tab('show');            
         });
+        function getURLParameter(name) {
+            return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+        }        
+        if (getURLParameter('erroSaveSettings')=='true')
+            $('#saveSettingsFailed').modal('show');   
         

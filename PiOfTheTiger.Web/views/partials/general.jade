@@ -1,23 +1,31 @@
 #generalSettings
     h4 General settings
+    
     p This page contains some general settings that you can configure in this system
-    form( method="post")#login-form.span4            
+    form( method="post", action="/saveGeneralSettings")#login-form.span4            
             input(type="hidden", name="returnUrl", id="returnUrl")
             div.clear-fix
             hr            
-            label Tollerance 
+            label Picture tolerance 
             .btn-group(data-toggle="buttons-radio")
-                button.btn Very low
-                    i.icn-flower
-                button.btn Low
-                button.btn Medium
-                button.btn High
-                button.btn Very high
-            a.btn.primary(href='#')
-                img.pull-left.button-icon(src='../img/flower-pot.png')
-                  | Text
+                button.btn(type="button", value="1") Very low                    
+                button.btn(type="button", value="2") Low
+                button.btn(type="button", value="3") Medium
+                button.btn(type="button", value="4") High
+                button.btn(type="button", value="5") Very high
+            &nbsp;
+            label Picture save path
+            input(type="text", name="imgPath", id="imgPath", value=PicturesSavedPath)
+            label Picture save interval (in minutes)
+            input(type="range", name="imgSaveInterval", id="imgSaveInterval", min="1", max="10", value="1")
+            input(type="hidden", name="tolerance", id="tolerance")
             div.clear-fix
             hr            
             button(type="submit")#btn-login.btn.btn-primary
                 i.icon-ok.icon-white
                 |     Save                       
+block scripts
+    script       
+        $(".btn-group > button.btn").on("click", function(){
+            $('#tolerance').val($(this).val());            
+         });
