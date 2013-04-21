@@ -3,20 +3,18 @@ extends layout
 block content
     h1 My house
     p Here you can view the events and all the devices connected to the system.
-    #{pictures}    
-
-    #picturesCarousel.carousel.slide
-        ol.carousel-indicators
-            li.active(data-target='#picturesCarousel', data-slide-to='0')
-            li(data-target='#picturesCarousel', data-slide-to='1')
-            li(data-target='#picturesCarousel', data-slide-to='2')
-          //
-             Carousel items 
-          .carousel-inner
+    .span6.offset3          
+        #picturesCarousel.carousel.slide                               
+            .carousel-inner
                 each picture in pictures
                     .item
-                        img(src='/pictures/picture000.jpg', alt="craousel_picture")
-          //
-             Carousel nav 
-          a.carousel-control.left(href='#picturesCarousel', data-slide='prev') ‹
-          a.carousel-control.right(href='#picturesCarousel', data-slide='next') ›
+                        img(src="/pictures/#{picture}", alt="craousel_picture")          
+        a.carousel-control.left(href='#picturesCarousel', data-slide='prev') ‹
+        a.carousel-control.right(href='#picturesCarousel', data-slide='next') ›
+block scripts
+    script
+        $(function(){
+            $('.carousel-inner item:first').addClass('active');
+            alert($('.carousel-inner item:first'));
+        });
+        

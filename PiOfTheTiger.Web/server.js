@@ -56,7 +56,7 @@ function readProcessedImages(req, res, next)
         {
             if (err) throw err;
             var picsPath = rows[0].Value;
-
+            console.log(picsPath);
             var files = fs.readdirSync(picsPath);
 
             global.savedPictures = files;
