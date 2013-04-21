@@ -51,7 +51,7 @@ function readProcessedImages(req, res, next)
 {
     global.mySqlPool.getConnection(function (err, connection)
     {
-        var sqlPicturesSavePath = "select `Value` from appsettings where ID in (6)";
+        var sqlPicturesSavePath = "select `Value` from AppSettings where ID in (6)";
         connection.query(sqlPicturesSavePath, function (err, rows)
         {
             if (err) throw err;
@@ -76,7 +76,7 @@ function readGeneralSettings(req, res, next)
 {    
     global.mySqlPool.getConnection(function (err, connection)
     {
-        var sqlPicturesSavePath = "select `Value` from appsettings where ID in (6, 7, 8)";
+        var sqlPicturesSavePath = "select `Value` from AppSettings where ID in (6, 7, 8)";
         connection.query(sqlPicturesSavePath, function (err, rows)
         {
             if (err) throw err;
@@ -93,7 +93,7 @@ function readEmailSettings(req, res, next)
 {    
     global.mySqlPool.getConnection(function (err, connection)
     {
-        var sqlPicturesSavePath = "select `Value` from appsettings where ID in (1,2,3,4,5)";
+        var sqlPicturesSavePath = "select `Value` from AppSettings where ID in (1,2,3,4,5)";
         connection.query(sqlPicturesSavePath, function (err, rows)
         {
             if (err) throw err;
@@ -145,7 +145,7 @@ app.post('/login', function (req, res)
     {
         var userName = req.body.user;
         var password = req.body.password;
-        var sql = 'select IdUser from users where Username=' + connection.escape(userName) + ' and password = ' + connection.escape(password);
+        var sql = 'select IdUser from Users where Username=' + connection.escape(userName) + ' and password = ' + connection.escape(password);
         connection.query(sql, function (err, rows)
         {
             if (err) throw err;
@@ -173,7 +173,7 @@ app.post('/saveGeneralSettings', function (req, res)
     global.mySqlPool.getConnection(function (err, connection)
     {
         var tolerance = req.body.tolerance;
-        var sqlTolerance = 'update appsettings set `Value`=' + connection.escape(tolerance) + ' where `Key`=\'PicturesCompareTolerance\';';
+        var sqlTolerance = 'update AppSettings set `Value`=' + connection.escape(tolerance) + ' where `Key`=\'PicturesCompareTolerance\';';
         connection.query(sqlTolerance, function (err, rows)
         {
             if (err) res.redirect('/Settings?erroSaveSettings=true', { error: err });
@@ -184,7 +184,7 @@ app.post('/saveGeneralSettings', function (req, res)
     global.mySqlPool.getConnection(function (err, connection)
     {
         var imgPath = req.body.imgPath;
-        var sqlimgPath = 'update appsettings set `Value` = ' + connection.escape(imgPath) + ' where `Key` = \'PicturesSavePath\'';
+        var sqlimgPath = 'update AppSettings set `Value` = ' + connection.escape(imgPath) + ' where `Key` = \'PicturesSavePath\'';
         connection.query(sqlimgPath, function (err, rows)
         {
             if (err) res.redirect('/Settings?erroSaveSettings=true', { error: err });
@@ -195,7 +195,7 @@ app.post('/saveGeneralSettings', function (req, res)
     global.mySqlPool.getConnection(function (err, connection)
     {
         var imgSaveInterval = req.body.imgSaveInterval;
-        var sqlimgSaveInterval = 'update appsettings set `Value` = ' + connection.escape(imgSaveInterval) + ' where `Key` = \'PicturesSaveInterval\'';
+        var sqlimgSaveInterval = 'update AppSettings set `Value` = ' + connection.escape(imgSaveInterval) + ' where `Key` = \'PicturesSaveInterval\'';
         connection.query(sqlimgSaveInterval, function (err, rows)
         {
             if (err) res.redirect('/Settings?erroSaveSettings=true', { error: err });
