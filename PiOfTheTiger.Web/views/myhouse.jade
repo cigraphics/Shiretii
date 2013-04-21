@@ -3,9 +3,7 @@ extends layout
 block content
     h1 My house
     p Here you can view the events and all the devices connected to the system.
-    #{pictures}
-    each picture in pictures
-          p= picture
+    #{pictures}    
 
     #picturesCarousel.carousel.slide
         ol.carousel-indicators
@@ -17,7 +15,7 @@ block content
           .carousel-inner
                 each picture in pictures
                     .item
-                        img(src='/'+picturesPath+'/'+picture, alt="craousel_picture")
+                        img(src='/pictures/picture000.jpg', alt="craousel_picture")
           //
              Carousel nav 
           a.carousel-control.left(href='#picturesCarousel', data-slide='prev') ‹

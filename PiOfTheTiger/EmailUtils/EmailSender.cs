@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,9 +26,17 @@ namespace EmailUtils
             this.emailSettings = emailSettings;
         }
 
+        /// <summary>
+        /// Sends email using a SMTPClient
+        /// </summary>
+        /// <param name="email"></param>
         public void SendTheMail(MailMessage email)
         {
             SmtpClient smtpClient = InitializeSmtpClient();
+
+            ServicePointManager.ServerCertificateValidationCallback =
+            delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+            { return true; };
 
             smtpClient.Send(email);
 
@@ -35,10 +45,11 @@ namespace EmailUtils
 
         private SmtpClient InitializeSmtpClient()
         {
-            SmtpClient smtpClient = new SmtpClient();
-            smtpClient.Host = emailSettings.SMTPServer;
+            SmtpClient smtpClient = new SmtpClient(emailSettings.SMTPServer);
+
             smtpClient.Port = emailSettings.SMTPPort;
             smtpClient.EnableSsl = emailSettings.SMTPSslRequired;
+
             smtpClient.Credentials = new NetworkCredential(emailSettings.SMTPUserName, emailSettings.SMTPPassword);
             return smtpClient;
         }

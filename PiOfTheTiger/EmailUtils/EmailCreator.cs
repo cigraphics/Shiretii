@@ -11,7 +11,11 @@ namespace EmailUtils
 {
     public class EmailCreator
     {
-        public void SendMailForDifferentImages(string imagePath, string differentImagePath)
+        /// <summary>
+        /// Sends email with picture attachment
+        /// </summary>
+        /// <param name="imagePath">Path to the image on the disk</param>
+        public void SendMailForDifferentImages(string imagePath)
         {
             EmailSettings emailSettings = new EmailSettingsQuery().GetEmailSettings();
 
@@ -27,6 +31,7 @@ namespace EmailUtils
             };
 
             List<AddressBook> addresses = new AddressBookQuery().GetAllAddressBook();
+
             foreach (AddressBook address in addresses)
             {
                 mailMessage.To.Add(address.EmailAddress);
@@ -35,9 +40,8 @@ namespace EmailUtils
             mailMessage.CC.Add(mailFrom);
 
             mailMessage.Attachments.Add(new Attachment(imagePath));
-            mailMessage.Attachments.Add(new Attachment(differentImagePath));
 
-            new EmailSender().SendTheMail(mailMessage);
+            new EmailSender(emailSettings).SendTheMail(mailMessage);
         }
     }
 }

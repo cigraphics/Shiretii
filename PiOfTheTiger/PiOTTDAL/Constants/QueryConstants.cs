@@ -21,7 +21,6 @@ namespace PiOTTDAL.Constants
         #region Pictures
 
         public const string AppSettingsKey_PicturesSavePath = "PicturesSavePath";
-        public const string AppSettingsKey_ProcessedPicturesSavePath = "ProcessedPicturesSavePath";
         public const string AppSettingsKey_PicturesSaveInterval = "PicturesSaveInterval";
         public const string AppSettingsKey_PicturesCompareTolerance = "PicturesCompareTolerance";
 

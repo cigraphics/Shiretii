@@ -23,7 +23,6 @@ namespace PiOTTWebCam.ContinuousCapturing
         private List<Camera> availableCameras;
         private Timer timer;
         private string picturesFolder;
-        private string processedPicturesFolder;
 
         public ContinuousCapture()
         {
@@ -32,10 +31,6 @@ namespace PiOTTWebCam.ContinuousCapturing
             InitializeTimer();
 
             picturesFolder = new AppSettingsQuery().GetAppSettingByKey(QueryConstants.AppSettingsKey_PicturesSavePath);
-            processedPicturesFolder = new AppSettingsQuery().GetAppSettingByKey(QueryConstants.AppSettingsKey_ProcessedPicturesSavePath);
-
-            if (!Directory.Exists(processedPicturesFolder))
-                Directory.CreateDirectory(processedPicturesFolder);
         }
 
         private void InitializeTimer()
@@ -48,6 +43,11 @@ namespace PiOTTWebCam.ContinuousCapturing
             timer.Elapsed += timer_Elapsed;
         }
 
+        /// <summary>
+        /// The method fired when the timer interval elapses
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             timer.Stop();
@@ -61,21 +61,19 @@ namespace PiOTTWebCam.ContinuousCapturing
             string interval = new AppSettingsQuery().GetAppSettingByKey(QueryConstants.AppSettingsKey_PicturesSaveInterval);
             Double actualInterval = Double.Parse(interval);
 
-            if (actualInterval != timer.Interval)
-            {
-                //timer.Stop();
-                timer.Interval = actualInterval;
-                //timer.Start();
-            }
+            timer.Interval = actualInterval;
 
             timer.Start();
         }
 
+        /// <summary>
+        /// Calls the method to compare the pictures and if differences found
+        /// sends a mail to the defined address book.
+        /// </summary>
+        /// <param name="cam"></param>
         private void CompareTakenPictures(Camera cam)
         {
             string path = Path.Combine(picturesFolder, cam.CameraName);
-            Console.WriteLine(path);
-
             List<String> files = Directory.EnumerateFiles(path).ToList();
 
             if (files.Count > 2)
@@ -84,11 +82,9 @@ namespace PiOTTWebCam.ContinuousCapturing
                 {
                     File.Delete(file);
                 }
-                Console.WriteLine("Files deleted");
             }
             else if (files.Count == 2)
             {
-                Console.WriteLine("We have 2 files");
                 FileInfo file0 = new FileInfo(files[0]);
                 FileInfo file1 = new FileInfo(files[1]);
 
@@ -98,32 +94,25 @@ namespace PiOTTWebCam.ContinuousCapturing
                     file1 = new FileInfo(files[0]);
                 }
 
-                Console.WriteLine(String.Format("File {0} is newer than file {1}", file1.FullName, file0.FullName));
+                Boolean compareResult = ImageComparer.Compare(file0.FullName, file1.FullName);
 
-                Bitmap bitmap = ImageComparer.Compare(file0.FullName, file1.FullName);
-                Console.WriteLine("Compare finished");
-
-                if (bitmap != null)
+                if (!compareResult)
                 {
-                    string diffSaveFullPath = Path.Combine(processedPicturesFolder, String.Format("{0}_Differences.jpg", Path.GetFileNameWithoutExtension(file1.FullName)));
-                    Console.WriteLine(diffSaveFullPath);
-                    bitmap.Save(diffSaveFullPath);
-                    new EmailCreator().SendMailForDifferentImages(file1.FullName, diffSaveFullPath);
+                    new EmailCreator().SendMailForDifferentImages(file1.FullName);
                 }
 
                 File.Delete(file0.FullName);
             }
         }
 
+        /// <summary>
+        /// Initializes the cameras from the database.
+        /// </summary>
         private void InitializeCameras()
         {
             availableCameras = new CameraQuery().GetAllCamera();
-            camBuilder = Cameras.DeclareDevice().Named(availableCameras[0].CameraName).WithDevicePath(availableCameras[0].Path);
-
-            foreach (Camera camera in availableCameras.Skip(1))
-            {
-                camBuilder.AndDevice().Named(camera.CameraName).WithDevicePath(camera.Path);
-            }
+            camBuilder = Cameras.DeclareDevice().Named(availableCameras[1].CameraName).WithDevicePath(availableCameras[1].Path)
+                .AndDevice().Named(availableCameras[0].CameraName).WithDevicePath(availableCameras[0].Path);
 
             cameras = camBuilder.Memorize();
         }
