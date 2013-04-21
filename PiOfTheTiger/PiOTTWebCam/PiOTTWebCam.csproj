@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{19CF15C2-7D7B-4833-8954-397097BDE48A}</ProjectGuid>
+    <ProjectGuid>{7151366B-AD38-48CA-AA59-E946AD04568C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EmailUtils</RootNamespace>
-    <AssemblyName>EmailUtils</AssemblyName>
+    <RootNamespace>PiOTTWebCam</RootNamespace>
+    <AssemblyName>PiOTTWebCam</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,8 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="RaspberryCam">
+      <HintPath>..\packages\RaspberryCam.1.0.0.0\lib\net40\RaspberryCam.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -39,11 +43,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EmailCreator.cs" />
-    <Compile Include="EmailSender.cs" />
+    <Compile Include="CaptureImages\CaptureImage.cs" />
+    <Compile Include="ContinuousCapturing\ContinuousCapture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EmailUtils\EmailUtils.csproj">
+      <Project>{19cf15c2-7d7b-4833-8954-397097bde48a}</Project>
+      <Name>EmailUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PictureUtils\PictureUtils.csproj">
+      <Project>{2e3f9fcf-217d-474f-b617-e9927cc30924}</Project>
+      <Name>PictureUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PiOTTDAL\PiOTTDAL.csproj">
       <Project>{96880053-b77e-4366-aa13-4ca9cabcc52e}</Project>
       <Name>PiOTTDAL</Name>
